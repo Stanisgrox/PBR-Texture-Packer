@@ -43,7 +43,9 @@ ipcMain.on('message', async (event, arg) => {
 const server = 'https://your-deployment-url.com'
 const url = `${server}/update/${process.platform}/${app.getVersion()}`
 
-autoUpdater.setFeedURL({ url })
+autoUpdater.setFeedURL({ url });
+autoUpdater.autoDownload = true;
+autoUpdater.autoIntallOnAppQuit = true;
 
 setInterval(() => {
   autoUpdater.checkForUpdates()

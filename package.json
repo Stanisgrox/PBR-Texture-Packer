@@ -5,6 +5,11 @@
   "version": "1.0.0",
   "author": "Stanislav Kolpakov <stanisgrox@yandex.ru>",
   "main": "app/background.js",
+  "repository": "https://github.com/Stanisgrox/PBR-Texture-Packer",
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
+  },
   "scripts": {
     "dev": "nextron",
     "build": "nextron build",
