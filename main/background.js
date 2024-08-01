@@ -40,8 +40,7 @@ ipcMain.on('message', async (event, arg) => {
 })
 
 //UPDATER
-const server = 'https://your-deployment-url.com'
-const url = `${server}/update/${process.platform}/${app.getVersion()}`
+const url = `https://github.com/Stanisgrox/PBR-Texture-Packer/releases/latest`
 
 autoUpdater.setFeedURL({ url });
 autoUpdater.autoDownload = true;
