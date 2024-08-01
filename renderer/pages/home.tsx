@@ -132,7 +132,7 @@ const Home = () => {
           <button onClick={() => {
             console.log(canvas.current as HTMLCanvasElement);
             const bytes = (canvas.current as HTMLCanvasElement).toDataURL();
-            const imageName = 'Texting_Download';
+            const imageName = 'PBR_Channels_Packed';
             saveImage(bytes, imageName);
           }} className="mt-5 mb-7 text-3xl">
             SAVE
