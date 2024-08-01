@@ -25,10 +25,12 @@ It saves GPU memory and clears assets clutter.
 ### Missing features
 - Nicer interface
 - Autonaming for output files
-- Redirect to source image file when saving
 - Logo
 
 ### May be implemented / not guaranteed
 - Alpha Channel support
 - MacOS and Linux support
 - Lossless PNG compression for saving Hard Drive space
+
+### Won't be implemented
+- Redirect to source image file when saving (Security hazard)
