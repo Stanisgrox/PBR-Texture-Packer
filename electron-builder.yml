@@ -1,0 +1,12 @@
+appId: com.stanisgrox.pbrpacker
+productName: PBR Texture Packer
+copyright: Copyright © 2024 Stanislav Kolpakov
+directories:
+  output: dist
+  buildResources: resources
+files:
+  - from: .
+    filter:
+      - package.json
+      - app
+publish: null
