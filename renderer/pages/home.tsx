@@ -42,7 +42,7 @@ const Home = () => {
 
   return (
     <>
-      <MetaHeader title="Stanisgrox's PBR Texture Packer" />
+      <MetaHeader title="Stanisgrox's PBR Texture Packer 1.0.1" />
       <div className="text-center w-full pl-2 pr-2">
         <h1 className="mt-5 mb-4 text-2xl">
           PBR Texture Packer
