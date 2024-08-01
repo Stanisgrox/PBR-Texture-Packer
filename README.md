@@ -15,3 +15,20 @@ In any 3D software with RGB channel separation.
 ## Pros of texture channel packing
 
 It saves GPU memory and clears assets clutter.
+
+## Known bugs and missing features (v1.0.2)
+
+### Bugs
+- Footer links are unckickable.
+- Red channel must be populated otherwise it won't render.
+
+### Missing features
+- Nicer interface
+- Autonaming for output files
+- Redirect to source image file when saving
+- Logo
+
+### May be implemented / not guaranteed
+- Alpha Channel support
+- MacOS and Linux support
+- Lossless PNG compression for saving Hard Drive space
