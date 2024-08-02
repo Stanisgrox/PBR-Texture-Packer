@@ -43,7 +43,7 @@ const Home = () => {
     <>
       <MetaHeader title="Stanisgrox's PBR Texture Packer" />
       <div className="text-center w-full pl-2 pr-2">
-        <h2 className="mb-2 mt-2 text-blue-200">
+        <h2 className="mb-3 mt-2 text-blue-200">
           Step I - Load your textures
         </h2>
         <form 
@@ -85,7 +85,7 @@ const Home = () => {
           <div>
             <button 
               onClick={() => clearFiles()} 
-              className="mt-4 mb-1 text-lg bg-slate-900 pt-3 pb-3 pl-8 pr-8 rounded-3xl"
+              className="mt-4 mb-1 text-lg bg-slate-900 pt-3 pb-3 pl-10 pr-10 rounded-3xl text-blue-200"
             >
               Clear images
             </button>

@@ -2,7 +2,7 @@
   "private": true,
   "name": "pbr-texture-packer",
   "description": "PBR Texture packer for render engines",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "author": "Stanislav Kolpakov <stanisgrox@yandex.ru>",
   "main": "app/background.js",
   "repository": "https://github.com/Stanisgrox/PBR-Texture-Packer",
@@ -43,7 +43,9 @@
     "appId": "com.stanisgrox.pbrpacker",
     "productName": "Stanisgrox PBR Texture Packer",
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "publisherName": "Stanisgrox",
+      "legalTrademarks": "(c) 2024 stanisgrox.com"
     },
     "directories":{
       "output": "dist"
