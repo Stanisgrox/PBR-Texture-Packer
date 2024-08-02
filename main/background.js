@@ -41,4 +41,4 @@ ipcMain.on('message', async (event, arg) => {
 })
 
 
-//autoUpdater.checkForUpdatesAndNotify()
+autoUpdater.checkForUpdatesAndNotify()

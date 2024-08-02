@@ -47,13 +47,15 @@
       "publisherName": "Stanisgrox",
       "legalTrademarks": "(c) 2024 stanisgrox.com"
     },
-    "directories":{
+    "directories": {
       "output": "dist"
     },
-    "publish": [{
-      "provider": "github",
-      "owner": "Stanisgrox",
-      "repo": "PBR-Texture-Packer"
-    }]
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Stanisgrox",
+        "repo": "PBR-Texture-Packer"
+      }
+    ]
   }
 }
