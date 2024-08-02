@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron';
 
 const handler = {
   send(channel, value) {
@@ -12,6 +12,12 @@ const handler = {
       ipcRenderer.removeListener(channel, subscription)
     }
   },
-}
+};
 
-contextBridge.exposeInMainWorld('ipc', handler)
+contextBridge.exposeInMainWorld('ipc', handler);
+
+contextBridge.exposeInMainWorld('electron', {
+  startDrag: (fileName) => {
+    ipcRenderer.send('ondragstart', path.join(process.cwd(), fileName));
+  }
+});

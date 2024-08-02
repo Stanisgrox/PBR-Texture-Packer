@@ -14,9 +14,6 @@ export const Footer:React.FC<Div> = (props) => {
                     https://discord.gg/WjPVnS7rtg
                 </div>
                 <div>
-                    https://boosty.to/stanisgrox
-                </div>
-                <div>
                     https://x.com/stanisgrox
                 </div>
             </div>

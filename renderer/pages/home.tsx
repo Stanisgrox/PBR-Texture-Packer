@@ -24,6 +24,7 @@ const Home = () => {
       case "green":setGreenImageURL(URL.createObjectURL(file)); break;
       case "blue":setBlueImageURL(URL.createObjectURL(file));break;
     }
+    setSaver(!saver);
   }
 
   function clearFiles () {
@@ -59,18 +60,27 @@ const Home = () => {
               imageSrc={redImageURL} 
               channelName={"Red"} 
               loadFunc={loadImageFromFile}
+              setSaver={setSaver}
+              setImageURL={setRedImageURL}
+              saver={saver}
               ref={redImg}              
             />
             <ImageContainer 
               imageSrc={greenImageURL} 
               channelName={"Green"} 
               loadFunc={loadImageFromFile}
+              setSaver={setSaver}
+              setImageURL={setGreenImageURL}
+              saver={saver}
               ref={greenImg}              
             />
             <ImageContainer 
               imageSrc={blueImageURL} 
               channelName={"Blue"} 
               loadFunc={loadImageFromFile}
+              setSaver={setSaver}
+              setImageURL={setBlueImageURL}
+              saver={saver}
               ref={blueImg}              
             />
           </div>
