@@ -46,3 +46,15 @@ input::file-selector-button {
   background-color: #262f3b;
   color: #c5d1de;
 }
+
+.red{
+  color: #ef4444;
+}
+
+.green{
+  color: #22c55e
+}
+
+.blue{
+  color: #3b82f6;
+}

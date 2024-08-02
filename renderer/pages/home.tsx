@@ -4,6 +4,7 @@ import MetaHeader from "../foundations/MetaHeader";
 import { fileValidation } from "../utils/FileValidation";
 import { Footer } from "../components/footer";
 import { saveImage } from "../utils/saveImage";
+import { ImageContainer } from "../components/imagecontainer";
 
 const Home = () => {
 
@@ -54,33 +55,24 @@ const Home = () => {
           }}
         >
           <div className="flex justify-around">
-            <div className = "w-4/12 max-w-lg min-h-[512px] flex flex-col">
-              <img ref={redImg} src={redImageURL} className="max-w-lg ml-auto mr-auto"/>
-              <div className="mt-auto">
-                <div className="flex flex-col mt-2">
-                  <input type="file" name="red" accept="image/*" onChange={(e) => loadImageFromFile(e, "red")} className="mr-auto ml-auto"/>
-                  <label htmlFor="red" className="text-red-500">Red</label>
-                </div>
-              </div>
-            </div>
-            <div className = "w-4/12 max-w-lg min-h-[512px] flex flex-col">
-              <img ref={greenImg} src={greenImageURL} className="max-w-lg ml-auto mr-auto"/>
-              <div className="mt-auto">
-                <div className="flex flex-col mt-2">
-                  <input type="file" name="green" accept="image/*" onChange={(e) => loadImageFromFile(e, "green")} className="mr-auto ml-auto"/>
-                  <label htmlFor="green" className="text-green-500">Green</label>
-                </div>
-              </div>
-            </div>
-            <div className = "w-4/12 max-w-lg min-h-[512px] flex flex-col">
-              <img ref={blueImg} src={blueImageURL} className="max-w-lg ml-auto mr-auto"/>
-              <div className="mt-auto">
-                <div className="flex flex-col mt-2">
-                  <input type="file" name="blue" id="blue" accept="image/*" onChange={(e) => loadImageFromFile(e, "blue")} className="mr-auto ml-auto"/>
-                  <label htmlFor="blue" className="text-blue-500">Blue</label>
-                </div>
-              </div>
-            </div>
+            <ImageContainer 
+              imageSrc={redImageURL} 
+              channelName={"Red"} 
+              loadFunc={loadImageFromFile}
+              ref={redImg}              
+            />
+            <ImageContainer 
+              imageSrc={greenImageURL} 
+              channelName={"Green"} 
+              loadFunc={loadImageFromFile}
+              ref={greenImg}              
+            />
+            <ImageContainer 
+              imageSrc={blueImageURL} 
+              channelName={"Blue"} 
+              loadFunc={loadImageFromFile}
+              ref={blueImg}              
+            />
           </div>
           <div>
             <button 
@@ -96,7 +88,7 @@ const Home = () => {
             Textures must have same resolution for each channel. 
           </b>
           <br/>
-          Use only 8-bit textures (not suitable for HDR textures and Normal Maps). Any color will be converted to grayscale first. Only <span className="text-red-500">red</span> channel is mandatory.
+          Use only 8-bit textures (not suitable for HDR textures and Normal Maps). Any color will be converted to grayscale first. Only <span className="red">red</span> channel is mandatory.
         </p>
         <h2 className="mb-2 mt-3 text-blue-200">
           Step II - Verify your packed texture
