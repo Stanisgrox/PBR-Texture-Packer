@@ -2,7 +2,7 @@
   "private": true,
   "name": "pbr-texture-packer",
   "description": "PBR Texture packer for render engines",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "author": "Stanislav Kolpakov <stanisgrox@yandex.ru>",
   "main": "app/background.js",
   "repository": "https://github.com/Stanisgrox/PBR-Texture-Packer",
