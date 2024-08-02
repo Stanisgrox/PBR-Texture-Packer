@@ -19,7 +19,7 @@ It saves GPU memory and clears assets clutter.
 ## Known bugs and missing features (v1.0.2)
 
 ### Bugs
-- Footer links are unckickable.
+- Footer links are unclickable.
 - Red channel must be populated otherwise it won't render.
 
 ### Missing features

@@ -41,14 +41,12 @@ ipcMain.on('message', async (event, arg) => {
 
 //UPDATER
 const url = `https://github.com/Stanisgrox/PBR-Texture-Packer/releases/latest`
-
 autoUpdater.setFeedURL({ url });
-autoUpdater.autoDownload = true;
-autoUpdater.autoIntallOnAppQuit = true;
-
 setInterval(() => {
   autoUpdater.checkForUpdates()
-}, 60000)
+}, 6000);
+autoUpdater.autoDownload = true;
+autoUpdater.autoInstallInAppQuit = true;
 
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   const dialogOpts = {

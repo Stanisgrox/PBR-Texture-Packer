@@ -5,7 +5,6 @@ import { fileValidation } from "../utils/FileValidation";
 import { Footer } from "../components/footer";
 import { saveImage } from "../utils/saveImage";
 
-
 const Home = () => {
 
   const redImg = useRef(null);
@@ -44,13 +43,16 @@ const Home = () => {
     <>
       <MetaHeader title="Stanisgrox's PBR Texture Packer" />
       <div className="text-center w-full pl-2 pr-2">
-        <h1 className="mt-5 mb-4 text-2xl">
-          PBR Texture Packer
-        </h1>
-        <h2 className="mb-2">
+        <h2 className="mb-2 mt-2 text-blue-200">
           Step I - Load your textures
         </h2>
-        <form className="flex flex-col border-2 p-4 rounded-3xl shadow-xl" ref = {form}>
+        <form 
+          className="flex flex-col border-2 p-4 rounded-3xl shadow-xl border-blue-200" 
+          ref = {form}
+          style={{
+            background: 'linear-gradient(0deg, rgba(22,28,35,1) 0%, rgba(34,43,54,1) 100%)'
+          }}
+        >
           <div className="flex justify-around">
             <div className = "w-4/12 max-w-lg min-h-[512px] flex flex-col">
               <img ref={redImg} src={redImageURL} className="max-w-lg ml-auto mr-auto"/>
@@ -74,29 +76,37 @@ const Home = () => {
               <img ref={blueImg} src={blueImageURL} className="max-w-lg ml-auto mr-auto"/>
               <div className="mt-auto">
                 <div className="flex flex-col mt-2">
-                  <input type="file" name="blue" accept="image/*" onChange={(e) => loadImageFromFile(e, "blue")} className="mr-auto ml-auto"/>
+                  <input type="file" name="blue" id="blue" accept="image/*" onChange={(e) => loadImageFromFile(e, "blue")} className="mr-auto ml-auto"/>
                   <label htmlFor="blue" className="text-blue-500">Blue</label>
                 </div>
               </div>
             </div>
           </div>
           <div>
-            <button onClick={() => clearFiles()} className="mt-5 mb-7 text-lg">
+            <button 
+              onClick={() => clearFiles()} 
+              className="mt-4 mb-1 text-lg bg-slate-900 pt-3 pb-3 pl-8 pr-8 rounded-3xl"
+            >
               Clear images
             </button>
           </div>          
         </form>
-        <p className="mt-7">
-          <b>
+        <p className="mt-2 text-sm">
+          <b className="text-lg">
             Textures must have same resolution for each channel. 
           </b>
           <br/>
-          Use only 8-bit textures (not suitable for HDR textures and Normal Maps). Any texture will be converted to grayscale first.
+          Use only 8-bit textures (not suitable for HDR textures and Normal Maps). Any color will be converted to grayscale first. Only <span className="text-red-500">red</span> channel is mandatory.
         </p>
-        <h2 className="mb-2 mt-4">
+        <h2 className="mb-2 mt-3 text-blue-200">
           Step II - Verify your packed texture
         </h2>
-        <div className="border-2 rounded-3xl shadow-xl">
+        <div 
+          className="border-2 rounded-3xl shadow-xl border-blue-200"
+          style={{
+            background: 'linear-gradient(0deg, rgba(22,28,35,1) 0%, rgba(25,32,40,1) 100%)'
+          }}
+        >
           <Canvas 
             r_imgRef = {redImg} 
             g_imgRef = {greenImg} 
@@ -109,7 +119,7 @@ const Home = () => {
             className = "ml-auto mr-auto"
             ref={canvas}
           />
-          <img ref={resultImg} className="w-1/2 mr-auto ml-auto mt-7"/>
+          <img ref={resultImg} className="w-2/5 mr-auto ml-auto mt-2"/>
           <p 
             className="mt-5 text-red-700 text-lg"
             style={{
@@ -121,20 +131,19 @@ const Home = () => {
           >
             Re-generate your picture after changing textures!
           </p>
-          <button onClick={() => setSaver(!saver)} className="mt-5 mb-7 text-3xl">
+          <button onClick={() => setSaver(!saver)} className="mt-2 mb-2 text-3xl bg-slate-900 pt-3 pb-3 pl-12 pr-12 rounded-3xl">
             GENERATE
           </button>
         </div>
-        <h2 className="mb-2 mt-4">
-          Step III - Save texture
-        </h2>
-        <div className="border-2 rounded-3xl mb-6 shadow-xl">
-          <button onClick={() => {
-            console.log(canvas.current as HTMLCanvasElement);
-            const bytes = (canvas.current as HTMLCanvasElement).toDataURL();
-            const imageName = 'PBR_Channels_Packed';
-            saveImage(bytes, imageName);
-          }} className="mt-5 mb-7 text-3xl">
+        <div className="mb-6 mt-4">
+          <button 
+            onClick={() => {
+              const bytes = (canvas.current as HTMLCanvasElement).toDataURL();
+              const imageName = 'PBR_Channels_Packed';
+              saveImage(bytes, imageName);
+            }} 
+            className="mt-2 mb-4 text-3xl bg-green-900 pt-3 pb-3 pl-20 pr-20 rounded-3xl"
+          >
             SAVE
           </button>
         </div>
