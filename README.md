@@ -52,3 +52,21 @@ Source material (Albedo, _AO_, _Roughness_, _Specular_, _Displacement_, Normal) 
 
 ### Won't be implemented
 - Redirect to source image file when saving (Security hazard)
+
+## Building and Contributing
+### Building
+git clone this repo and then
+```powershell
+npm i
+```
+To launch dev build use
+```bash
+npm run dev
+```
+And to build production build
+```bash
+npm run build
+```
+### Contributing
+
+Contact me if you want to contribute. Feel free to fork this repo and opening issues in this repo.
