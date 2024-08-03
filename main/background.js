@@ -37,7 +37,7 @@ app.on('window-all-closed', () => {
 })
 
 app.on('ready', () => {
-  autoUpdater.checkForUpdatesAndNotify();
+  //autoUpdater.checkForUpdatesAndNotify();
 })
 
 ipcMain.on('message', async (event, arg) => {
