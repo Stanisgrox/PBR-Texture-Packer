@@ -13,9 +13,11 @@ Simple tool for packing monochrome images from PBR materials to single image for
 
 ### Saving image via Drag & Drop:
 ![save image with d&d](https://github.com/Stanisgrox/PBR-Texture-Packer/blob/master/.github/demo.gif)
+Saving images bigger than 4096x4096 via drag and drop may be laggy or even impossible. If you have source files bigger than 4K use "Save" button!
 
 ### Importing images via Drag & Drop:
 ![load image with d&d](https://github.com/Stanisgrox/PBR-Texture-Packer/blob/master/.github/demo2.gif)
+Importing images bigger than 4096x4096 takes some time.
 
 ### Where to use this images
 
@@ -24,6 +26,15 @@ In any 2D/3D software with RGB channel separation techniques.
 ## Pros of texture channel packing
 
 It saves GPU memory,clears assets clutter and sometimes might save your Disc space (PNG compression isn't implemented yet).
+
+Some tests performed in **Blender 4.1 Cycles**:
+Source material (Albedo, _AO_, _Roughness_, _Specular_, _Displacement_, Normal) applied to 4 vertex plane and 12K HDRI env.
+
+- 2K Unpacked total memory consumption: 2803 MB
+- 2K Packed total memory consumption: 2744 MB (-1.7%)
+
+- 8K Unpacked total memory consumption: 4243 MB
+- 8K Packed total memory consumption: 3476 MB (-18%)
 
 ## Known bugs and missing features (v1.2.0)
 
