@@ -6,12 +6,14 @@ interface CanvasProps extends Canvas {
     r_imgRef?: MutableRefObject<any>,
     g_imgRef?: MutableRefObject<any>,
     b_imgRef?: MutableRefObject<any>,
+    a_imgRef?: MutableRefObject<any>,
 
     res_imgRef?: MutableRefObject<any>,
 
     r_imgSrc?: string,
     g_imgSrc?: string,
     b_imgSrc?: string,
+    a_imgSrc?: string
 
     saver: boolean
 };
@@ -29,6 +31,7 @@ export const Canvas = forwardRef<HTMLCanvasElement, CanvasProps> ( function (pro
         const imageR = props.r_imgRef.current as HTMLImageElement;
         const imageG = props.g_imgRef.current as HTMLImageElement;
         const imageB = props.b_imgRef.current as HTMLImageElement;
+        const imageA = props.a_imgRef.current as HTMLImageElement;
 
         canvas.width = imageR.naturalWidth ? imageR.naturalWidth : 1;
         canvas.height = imageR.naturalHeight ? imageR.naturalHeight : 1;
@@ -42,10 +45,14 @@ export const Canvas = forwardRef<HTMLCanvasElement, CanvasProps> ( function (pro
         context.drawImage(imageB, 0, 0);
         const imageDataB = context.getImageData(0, 0, canvas.width, canvas.height);
         context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(imageA, 0, 0);
+        const imageDataA = context.getImageData(0, 0, canvas.width, canvas.height);
+        context.clearRect(0, 0, canvas.width, canvas.height);
 
         const pixelsR = imageDataR.data;
         const pixelsG = imageDataG.data;
         const pixelsB = imageDataB.data;
+        const pixelsA = imageDataA.data;
 
         if (imageDataR.data.length != imageDataB.data.length || imageDataG.data.length != imageDataR.data.length) return;
         
@@ -65,14 +72,19 @@ export const Canvas = forwardRef<HTMLCanvasElement, CanvasProps> ( function (pro
             const green_B = pixelsB[i + 1];
             const blue_B = pixelsB[i + 2];
             const grayscaleB = RGBToGrayScale(red_B, green_B, blue_B);
+            //Alpha conversion
+            const red_A = pixelsA[i];
+            const green_A = pixelsA[i + 1];
+            const blue_A = pixelsA[i + 2];
+            const grayscaleA = RGBToGrayScale(red_A, green_A, blue_A);
 
             pixelsR[i] = grayscaleR;
             pixelsR[i + 1] = grayscaleG;
             pixelsR[i + 2] = grayscaleB;
+            pixelsR[i + 3] = props.a_imgSrc? grayscaleA : !props.r_imgSrc? RGBToGrayScale(0, 0, 0) : RGBToGrayScale(255, 255, 255);
         }
 
         context.putImageData(imageDataR, 0, 0);
-
         const resultImg = props.res_imgRef.current as HTMLImageElement;
         resultImg.src = canvas.toDataURL();
 

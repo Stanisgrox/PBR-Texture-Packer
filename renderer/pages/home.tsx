@@ -11,6 +11,7 @@ const Home = () => {
   const redImg = useRef(null);
   const greenImg = useRef(null);
   const blueImg = useRef(null);
+  const alphaImg = useRef(null);
   const resultImg = useRef(null);
   const form = useRef(null);
   const canvas = useRef(null);
@@ -38,6 +39,7 @@ const Home = () => {
   const [redImageURL, setRedImageURL] = useState("");
   const [greenImageURL, setGreenImageURL] = useState("");
   const [blueImageURL, setBlueImageURL] = useState("");
+  const [alphaImageURL, setAlphaImageURL] = useState("");
   const [saver, setSaver] = useState(false);
 
 
@@ -83,11 +85,20 @@ const Home = () => {
               saver={saver}
               ref={blueImg}              
             />
+            <ImageContainer 
+              imageSrc={alphaImageURL} 
+              channelName={"Alpha"} 
+              loadFunc={loadImageFromFile}
+              setSaver={setSaver}
+              setImageURL={setAlphaImageURL}
+              saver={saver}
+              ref={alphaImg}              
+            />
           </div>
           <div>
             <button 
               onClick={() => clearFiles()} 
-              className="mt-4 mb-1 text-lg bg-slate-900 pt-3 pb-3 pl-10 pr-10 rounded-3xl text-blue-200"
+              className="mt-4 mb-1 text-lg bg-blue-950 pt-3 pb-3 pl-10 pr-10 rounded-3xl text-blue-200 hover:bg-blue-600"
             >
               Clear images
             </button>
@@ -113,9 +124,11 @@ const Home = () => {
             r_imgRef = {redImg} 
             g_imgRef = {greenImg} 
             b_imgRef = {blueImg}
+            a_imgRef = {alphaImg}
             r_imgSrc = {redImageURL} 
             g_imgSrc = {greenImageURL} 
             b_imgSrc = {blueImageURL}
+            a_imgSrc = {alphaImageURL}
             saver = {saver}
             res_imgRef = {resultImg} 
             className = "ml-auto mr-auto"
@@ -123,7 +136,7 @@ const Home = () => {
           />
           <img ref={resultImg} className="w-2/5 mr-auto ml-auto mt-2"/>
           <p 
-            className="mt-5 text-red-700 text-lg"
+            className="mt-5 text-red-700 text-lg mb-2"
             style={{
               animationDuration: '3s',
               animationName: 'pulseRed',
@@ -133,7 +146,7 @@ const Home = () => {
           >
             Re-generate your picture after changing textures!
           </p>
-          <button onClick={() => setSaver(!saver)} className="mt-2 mb-2 text-3xl bg-slate-900 pt-3 pb-3 pl-12 pr-12 rounded-3xl">
+          <button onClick={() => setSaver(!saver)} className="mt-2 mb-4 text-3xl bg-red-950 pt-3 pb-3 pl-12 pr-12 rounded-3xl hover:bg-red-600">
             GENERATE
           </button>
         </div>
@@ -144,7 +157,7 @@ const Home = () => {
               const imageName = 'PBR_Channels_Packed';
               saveImage(bytes, imageName);
             }} 
-            className="mt-2 mb-4 text-3xl bg-green-900 pt-3 pb-3 pl-20 pr-20 rounded-3xl"
+            className="mt-2 mb-4 text-3xl bg-green-950 pt-3 pb-3 pl-20 pr-20 rounded-3xl hover:bg-green-600"
           >
             SAVE
           </button>

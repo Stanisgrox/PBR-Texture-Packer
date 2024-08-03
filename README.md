@@ -4,10 +4,12 @@ Simple tool for packing monochrome images from PBR materials to single image for
 
 ## Usage
 
-1. Choose 1 to 3 images in File Input boxes. (Choose Red channel first.)
+1. Choose 1 to 4 images in File Input boxes. (Choose Red channel first.)
 **Now with Drag & Drop support! You can drag images into boxes and drag your result image out of Application to quickly save it!**
 2. Click "Generate" to preview your image on canvas.
 3. Click "Save" and choose your output directory or just **drag** result image in preferable directory.
+
+**If Alpha channel isn't populated it will be set to full #FFFFFF color**
 
 ### Saving image via Drag & Drop:
 ![save image with d&d](https://github.com/Stanisgrox/PBR-Texture-Packer/blob/master/.github/demo.gif)
@@ -23,7 +25,7 @@ In any 2D/3D software with RGB channel separation techniques.
 
 It saves GPU memory,clears assets clutter and sometimes might save your Disc space (PNG compression isn't implemented yet).
 
-## Known bugs and missing features (v1.0.2)
+## Known bugs and missing features (v1.2.0)
 
 ### Bugs
 - Footer links are unclickable.
@@ -34,7 +36,6 @@ It saves GPU memory,clears assets clutter and sometimes might save your Disc spa
 - Logo
 
 ### May be implemented / not guaranteed
-- Alpha Channel support
 - MacOS and Linux support
 - Lossless PNG compression for saving Hard Drive space
 

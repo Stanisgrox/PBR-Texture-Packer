@@ -35,7 +35,7 @@ export const ImageContainer = forwardRef<HTMLDivElement, ImageContainerProps>( f
     }
 
     return(
-        <div className = "w-4/12 max-w-lg min-h-[512px] flex flex-col pl-1 pr-1">
+        <div className = "w-1/4 max-w-lg min-h-[512px] flex flex-col pl-1 pr-1">
             <div 
                 className= "w-full h-full rounded-md border-2 border-dashed border-sky-200 hover:border-sky-400 aspect-square"
                 ref={dndzone}
