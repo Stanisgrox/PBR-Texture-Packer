@@ -9,6 +9,12 @@ Simple tool for packing monochrome images from PBR materials to single image for
 2. Click "Generate" to preview your image on canvas.
 3. Click "Save" and choose your output directory or just **drag** result image in preferable directory.
 
+### Saving image via Drag & Drop:
+![save image with d&d](https://github.com/Stanisgrox/PBR-Texture-Packer/blob/master/.github/demo.gif)
+
+### Importing images via Drag & Drop:
+![load image with d&d](https://github.com/Stanisgrox/PBR-Texture-Packer/blob/master/.github/demo2.gif)
+
 ### Where to use this images
 
 In any 2D/3D software with RGB channel separation techniques.
