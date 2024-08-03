@@ -9,7 +9,7 @@ Simple tool for packing monochrome images from PBR materials to single image for
 2. Click "Generate" to preview your image on canvas.
 3. Click "Save" and choose your output directory or just **drag** result image in preferable directory.
 
-**If Alpha channel isn't populated it will be set to full #FFFFFF color**
+**If Alpha channel isn't populated it will be set to full value**
 
 ### Saving image via Drag & Drop:
 ![save image with d&d](https://github.com/Stanisgrox/PBR-Texture-Packer/blob/master/.github/demo.gif)
