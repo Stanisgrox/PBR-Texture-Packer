@@ -1,5 +1,5 @@
 import { forwardRef, MutableRefObject, useEffect, useRef } from "react";
-import { RGBToGrayScale } from "../utils/RGBToGrayscale";
+import { closestDivider } from "../utils/closestDivider";
 
 type Canvas = JSX.IntrinsicElements['canvas'];
 
@@ -64,7 +64,7 @@ export const Canvas = forwardRef<HTMLCanvasElement, CanvasProps> ( function (pro
 
         if (imageDataR.data.length != imageDataB.data.length || imageDataG.data.length != imageDataR.data.length) return;
 
-        const threads = pixelsR.length > navigator.hardwareConcurrency? navigator.hardwareConcurrency : pixelsR.length
+        const threads = closestDivider(pixelsR.length / 4, navigator.hardwareConcurrency);
         const promises = [];
 
         const createWorkers = (i: number) => {
