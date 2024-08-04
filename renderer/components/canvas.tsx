@@ -2,6 +2,7 @@ import { forwardRef, MutableRefObject, useEffect, useRef } from "react";
 import { RGBToGrayScale } from "../utils/RGBToGrayscale";
 
 type Canvas = JSX.IntrinsicElements['canvas'];
+
 interface CanvasProps extends Canvas {
     r_imgRef?: MutableRefObject<any>,
     g_imgRef?: MutableRefObject<any>,
@@ -18,9 +19,16 @@ interface CanvasProps extends Canvas {
     saver: boolean
 };
 
-export const Canvas = forwardRef<HTMLCanvasElement, CanvasProps> ( function (props, ref: MutableRefObject<HTMLCanvasElement>) {
+export interface WorkerData {
+    pixelsR: Uint8ClampedArray;
+    pixelsG: Uint8ClampedArray;
+    pixelsB: Uint8ClampedArray;
+    pixelsA: Uint8ClampedArray;
+    aSrc: boolean;
+    rSrc: boolean;
+};
 
-    //const canvasRef = useRef<HTMLCanvasElement | null>(null);
+export const Canvas = forwardRef<HTMLCanvasElement, CanvasProps> ( function (props, ref: MutableRefObject<HTMLCanvasElement>) {
 
     useEffect(() => {
         console.time('Rewrite Canvas');
@@ -55,40 +63,53 @@ export const Canvas = forwardRef<HTMLCanvasElement, CanvasProps> ( function (pro
         const pixelsA = imageDataA.data;
 
         if (imageDataR.data.length != imageDataB.data.length || imageDataG.data.length != imageDataR.data.length) return;
+
+        const threads = pixelsR.length > navigator.hardwareConcurrency? navigator.hardwareConcurrency : pixelsR.length
+        const promises = [];
+
+        const createWorkers = (i: number) => {
+            return new Promise(function(resolve) {
+                let worker = new Worker(new URL("../utils/conversionWorker", import.meta.url));
+                const sendingData: WorkerData = {
+                    pixelsR: pixelsR.slice(i * (pixelsR.length / threads), (i + 1) * (pixelsR.length / threads) > pixelsR.length? pixelsR.length : (i + 1) * (pixelsR.length / threads)),
+                    pixelsG: pixelsG.slice(i * (pixelsG.length / threads), (i + 1) * (pixelsG.length / threads) > pixelsG.length? pixelsG.length : (i + 1) * (pixelsG.length / threads)),
+                    pixelsB: pixelsB.slice(i * (pixelsB.length / threads), (i + 1) * (pixelsB.length / threads) > pixelsB.length? pixelsB.length : (i + 1) * (pixelsB.length / threads)),
+                    pixelsA: pixelsA.slice(i * (pixelsA.length / threads), (i + 1) * (pixelsA.length / threads) > pixelsA.length? pixelsA.length : (i + 1) * (pixelsA.length / threads)),
+                    aSrc: props.a_imgSrc? true : false,
+                    rSrc: props.r_imgSrc? true : false
+                }
+                worker.postMessage(sendingData);
+                worker.addEventListener('message', (message: MessageEvent<Uint8ClampedArray>) => {
+                    resolve(message.data);
+                })
+            })
+        };
+
+        for (let i = 0; i < threads; i++){
+            promises.push(createWorkers(i));
+        };
+
+        Promise.all(promises)
+            .then((data: Uint8ClampedArray[]) => {
+                let length = 0;
+                data.forEach((chunk) => {
+                    length = length + chunk.length;
+                });
+                const mergedData = new Uint8ClampedArray(length);
+                let increment = 0 
+                data.forEach((chunk) => {
+                    mergedData.set(chunk, increment);
+                    increment = increment + chunk.length
+                });
+
+                const newData = new ImageData(mergedData, canvas.width, canvas.height)
+
+                context.putImageData(newData, 0, 0);
+                const resultImg = props.res_imgRef.current as HTMLImageElement;
+                resultImg.src = canvas.toDataURL();
         
-        for (var i = 0; i < pixelsR.length; i+=4) {
-            //Red conversion
-            const red_R = pixelsR[i];
-            const green_R = pixelsR[i + 1];
-            const blue_R = pixelsR[i + 2];
-            const grayscaleR = RGBToGrayScale(red_R, green_R, blue_R);
-            //Green conversion
-            const red_G = pixelsG[i];
-            const green_G = pixelsG[i + 1];
-            const blue_G = pixelsG[i + 2];
-            const grayscaleG = RGBToGrayScale(red_G, green_G, blue_G);
-            //Blue conversion
-            const red_B = pixelsB[i];
-            const green_B = pixelsB[i + 1];
-            const blue_B = pixelsB[i + 2];
-            const grayscaleB = RGBToGrayScale(red_B, green_B, blue_B);
-            //Alpha conversion
-            const red_A = pixelsA[i];
-            const green_A = pixelsA[i + 1];
-            const blue_A = pixelsA[i + 2];
-            const grayscaleA = RGBToGrayScale(red_A, green_A, blue_A);
-
-            pixelsR[i] = grayscaleR;
-            pixelsR[i + 1] = grayscaleG;
-            pixelsR[i + 2] = grayscaleB;
-            pixelsR[i + 3] = props.a_imgSrc? grayscaleA : !props.r_imgSrc? RGBToGrayScale(0, 0, 0) : RGBToGrayScale(255, 255, 255);
-        }
-
-        context.putImageData(imageDataR, 0, 0);
-        const resultImg = props.res_imgRef.current as HTMLImageElement;
-        resultImg.src = canvas.toDataURL();
-
-        console.timeEnd('Rewrite Canvas');
+                console.timeEnd('Rewrite Canvas');
+            });
 
     }, [props]);
 
