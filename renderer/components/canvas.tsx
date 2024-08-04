@@ -106,7 +106,10 @@ export const Canvas = forwardRef<HTMLCanvasElement, CanvasProps> ( function (pro
 
                 context.putImageData(newData, 0, 0);
                 const resultImg = props.res_imgRef.current as HTMLImageElement;
-                resultImg.src = canvas.toDataURL();
+
+                canvas.toBlob((blob) => {
+                    resultImg.src = URL.createObjectURL(blob);
+                })
         
                 console.timeEnd('Rewrite Canvas');
             });
