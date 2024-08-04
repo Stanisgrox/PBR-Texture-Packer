@@ -43,7 +43,6 @@ Source material (Albedo, _AO_, _Roughness_, _Specular_, _Displacement_, Normal) 
 - Red channel must be populated otherwise it won't render.
 
 ### Missing features
-- Autonaming for output files (impossible for Drag and Drop way of saving img)
 - Logo
 
 ### May be implemented / not guaranteed
