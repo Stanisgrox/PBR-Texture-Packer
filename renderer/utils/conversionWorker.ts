@@ -31,4 +31,5 @@ self.onmessage = (event: MessageEvent<WorkerData>) => {
     }
 
     self.postMessage(event.data.pixelsR);
+    self.close();
 };
