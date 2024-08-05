@@ -21,3 +21,7 @@ package-lock.json
 
 #Env
 .env
+
+#ZIG - WASM
+.zig-cache/
+*.o
