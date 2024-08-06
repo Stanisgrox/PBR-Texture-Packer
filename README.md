@@ -36,10 +36,10 @@ Source material (Albedo, _AO_, _Roughness_, _Specular_, _Displacement_, Normal) 
 - 8K Unpacked total memory consumption: 4243 MB
 - 8K Packed total memory consumption: 3476 MB (-18%)
 
-## Known bugs and missing features (v1.2.0)
+## Known bugs and missing features (v1.3.0)
 
 ### Bugs
-- Red channel must be populated otherwise it won't render.
+- Red channel must be populated otherwise it won't render. (it determines resolution)
 
 ### Missing features
 - Logo
