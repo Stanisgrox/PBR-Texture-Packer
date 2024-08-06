@@ -11,10 +11,20 @@ export const Footer:React.FC<Div> = (props) => {
         >
             <div className="flex w-full justify-around">
                 <div>
-                    https://discord.gg/WjPVnS7rtg
+                    <a
+                        href="https://discord.gg/WjPVnS7rtg"
+                        target="_blank"
+                    >
+                        Discord
+                    </a>
                 </div>
                 <div>
-                    https://x.com/stanisgrox
+                    <a
+                        href="https://x.com/stanisgrox"
+                        target="_blank"
+                    >
+                        X (Twitter)
+                    </a>
                 </div>
             </div>
             <div className="text-center mt-4 p-4">

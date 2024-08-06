@@ -1,8 +1,7 @@
 import path from 'path';
-import { app, ipcMain, dialog } from 'electron';
+import { app, ipcMain, shell } from 'electron';
 import serve from 'electron-serve';
 import { createWindow } from './helpers';
-import { autoUpdater } from 'electron-updater';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -30,6 +29,12 @@ if (isProd) {
     await mainWindow.loadURL(`http://localhost:${port}/home`);
     mainWindow.webContents.openDevTools();
   }
+
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: 'deny' }
+  });
+
 })()
 
 app.on('window-all-closed', () => {
