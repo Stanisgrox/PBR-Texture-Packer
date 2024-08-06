@@ -39,7 +39,6 @@ Source material (Albedo, _AO_, _Roughness_, _Specular_, _Displacement_, Normal) 
 ## Known bugs and missing features (v1.2.0)
 
 ### Bugs
-- Footer links are unclickable.
 - Red channel must be populated otherwise it won't render.
 
 ### Missing features
