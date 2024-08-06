@@ -41,10 +41,6 @@ app.on('window-all-closed', () => {
   app.quit();
 })
 
-app.on('ready', () => {
-  //autoUpdater.checkForUpdatesAndNotify();
-})
-
 ipcMain.on('message', async (event, arg) => {
   event.reply('message', `${arg} World!`);
 })
