@@ -4,12 +4,12 @@ import { closestDivider } from "../utils/closestDivider";
 type Canvas = JSX.IntrinsicElements['canvas'];
 
 interface CanvasProps extends Canvas {
-    r_imgRef?: MutableRefObject<any>,
-    g_imgRef?: MutableRefObject<any>,
-    b_imgRef?: MutableRefObject<any>,
-    a_imgRef?: MutableRefObject<any>,
+    r_imgRef?: MutableRefObject<HTMLImageElement>,
+    g_imgRef?: MutableRefObject<HTMLImageElement>,
+    b_imgRef?: MutableRefObject<HTMLImageElement>,
+    a_imgRef?: MutableRefObject<HTMLImageElement>,
 
-    res_imgRef?: MutableRefObject<any>,
+    res_imgRef?: MutableRefObject<HTMLImageElement>,
 
     r_imgSrc?: string,
     g_imgSrc?: string,
