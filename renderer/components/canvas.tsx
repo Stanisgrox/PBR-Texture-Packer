@@ -1,4 +1,4 @@
-import { forwardRef, MutableRefObject, useEffect, useRef } from "react";
+import { forwardRef, MutableRefObject, useEffect } from "react";
 import { closestDivider } from "../utils/closestDivider";
 
 type Canvas = JSX.IntrinsicElements['canvas'];
