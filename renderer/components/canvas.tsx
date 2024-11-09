@@ -68,21 +68,32 @@ export const Canvas = forwardRef<HTMLCanvasElement, CanvasProps> ( function (pro
         const promises = [];
 
         const createWorkers = (i: number) => {
-            return new Promise(function(resolve) {
-                let worker = new Worker(new URL("../utils/conversionWorker", import.meta.url));
+            return new Promise((resolve) => {
+                const worker = new Worker(new URL("../utils/conversionWorker", import.meta.url));
+                
+                const startIdx = i * (pixelsR.length / threads);
+                const endIdx = Math.min((i + 1) * (pixelsR.length / threads), pixelsR.length);
+        
                 const sendingData: WorkerData = {
-                    pixelsR: pixelsR.slice(i * (pixelsR.length / threads), (i + 1) * (pixelsR.length / threads) > pixelsR.length? pixelsR.length : (i + 1) * (pixelsR.length / threads)),
-                    pixelsG: pixelsG.slice(i * (pixelsG.length / threads), (i + 1) * (pixelsG.length / threads) > pixelsG.length? pixelsG.length : (i + 1) * (pixelsG.length / threads)),
-                    pixelsB: pixelsB.slice(i * (pixelsB.length / threads), (i + 1) * (pixelsB.length / threads) > pixelsB.length? pixelsB.length : (i + 1) * (pixelsB.length / threads)),
-                    pixelsA: pixelsA.slice(i * (pixelsA.length / threads), (i + 1) * (pixelsA.length / threads) > pixelsA.length? pixelsA.length : (i + 1) * (pixelsA.length / threads)),
-                    aSrc: props.a_imgSrc? true : false,
-                    rSrc: props.r_imgSrc? true : false
-                }
-                worker.postMessage(sendingData);
+                    pixelsR: pixelsR.slice(startIdx, endIdx),
+                    pixelsG: pixelsG.slice(startIdx, endIdx),
+                    pixelsB: pixelsB.slice(startIdx, endIdx),
+                    pixelsA: pixelsA.slice(startIdx, endIdx),
+                    aSrc: !!props.a_imgSrc,
+                    rSrc: !!props.r_imgSrc
+                };
+        
+                worker.postMessage(sendingData, [
+                    sendingData.pixelsR.buffer,
+                    sendingData.pixelsG.buffer,
+                    sendingData.pixelsB.buffer,
+                    sendingData.pixelsA.buffer,
+                ]);
+        
                 worker.addEventListener('message', (message: MessageEvent<Uint8ClampedArray>) => {
                     resolve(message.data);
-                })
-            })
+                });
+            });
         };
 
         for (let i = 0; i < threads; i++){
@@ -91,26 +102,26 @@ export const Canvas = forwardRef<HTMLCanvasElement, CanvasProps> ( function (pro
 
         Promise.all(promises)
             .then((data: Uint8ClampedArray[]) => {
-                let length = 0;
-                data.forEach((chunk) => {
-                    length = length + chunk.length;
-                });
+
+                const length = data.reduce((sum, chunk) => sum + chunk.length, 0);
                 const mergedData = new Uint8ClampedArray(length);
-                let increment = 0 
-                data.forEach((chunk) => {
-                    mergedData.set(chunk, increment);
-                    increment = increment + chunk.length
-                });
-
-                const newData = new ImageData(mergedData, canvas.width, canvas.height)
-
+            
+                let offset = 0;
+                for (const chunk of data) {
+                    mergedData.set(chunk, offset);
+                    offset += chunk.length;
+                }
+            
+                const newData = new ImageData(mergedData, canvas.width, canvas.height);
                 context.putImageData(newData, 0, 0);
+            
                 const resultImg = props.res_imgRef.current as HTMLImageElement;
-
                 canvas.toBlob((blob) => {
-                    resultImg.src = URL.createObjectURL(blob);
-                })
-        
+                    if (blob) {
+                        resultImg.src = URL.createObjectURL(blob);
+                    }
+                });
+            
                 console.timeEnd('Rewrite Canvas');
             });
 
