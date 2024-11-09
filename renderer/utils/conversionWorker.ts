@@ -2,13 +2,16 @@ import { WorkerData } from "../components/canvas";
 import { RGBToGrayScale } from "./RGBToGrayscale";
 
 self.onmessage = (event: MessageEvent<WorkerData>) => {
-    for (var i = 0; i < event.data.pixelsR.length; i+=4) {
-        event.data.pixelsR[i] =  RGBToGrayScale(event.data.pixelsR[i], event.data.pixelsR[i + 1], event.data.pixelsR[i + 2]);
-        event.data.pixelsR[i + 1] = RGBToGrayScale(event.data.pixelsG[i], event.data.pixelsG[i + 1], event.data.pixelsG[i + 2]);
-        event.data.pixelsR[i + 2] = RGBToGrayScale(event.data.pixelsB[i], event.data.pixelsB[i + 1], event.data.pixelsB[i + 2]);
-        event.data.pixelsR[i + 3] = event.data.aSrc? RGBToGrayScale(event.data.pixelsA[i], event.data.pixelsA[i + 1], event.data.pixelsA[i + 2]) : !event.data.rSrc? 0 : 255;
+
+    const { pixelsR, pixelsG, pixelsB, pixelsA, aSrc, rSrc } = event.data;
+
+    for (var i = 0; i < pixelsR.length; i+=4) {
+        pixelsR[i] =  RGBToGrayScale(pixelsR[i], pixelsR[i + 1], pixelsR[i + 2]);
+        pixelsR[i + 1] = RGBToGrayScale(pixelsG[i], pixelsG[i + 1], pixelsG[i + 2]);
+        pixelsR[i + 2] = RGBToGrayScale(pixelsB[i], pixelsB[i + 1], pixelsB[i + 2]);
+        pixelsR[i + 3] = aSrc? RGBToGrayScale(pixelsA[i], pixelsA[i + 1], pixelsA[i + 2]) : !rSrc? 0 : 255;
     }
 
-    self.postMessage(event.data.pixelsR);
+    self.postMessage(pixelsR);
     self.close();
 };
