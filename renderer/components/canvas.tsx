@@ -35,34 +35,26 @@ export const Canvas = forwardRef<HTMLCanvasElement, CanvasProps> ( function (pro
 
         const canvas = ref.current as HTMLCanvasElement;
         const context = canvas.getContext('2d');
-
-        const imageR = props.r_imgRef.current as HTMLImageElement;
-        const imageG = props.g_imgRef.current as HTMLImageElement;
-        const imageB = props.b_imgRef.current as HTMLImageElement;
-        const imageA = props.a_imgRef.current as HTMLImageElement;
-
-        canvas.width = imageR.naturalWidth ? imageR.naturalWidth : 1;
-        canvas.height = imageR.naturalHeight ? imageR.naturalHeight : 1;
-
-        context.drawImage(imageR, 0, 0);
-        const imageDataR = context.getImageData(0, 0, canvas.width, canvas.height);
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.drawImage(imageG, 0, 0);
-        const imageDataG = context.getImageData(0, 0, canvas.width, canvas.height);
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.drawImage(imageB, 0, 0);
-        const imageDataB = context.getImageData(0, 0, canvas.width, canvas.height);
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.drawImage(imageA, 0, 0);
-        const imageDataA = context.getImageData(0, 0, canvas.width, canvas.height);
-        context.clearRect(0, 0, canvas.width, canvas.height);
-
-        const pixelsR = imageDataR.data;
-        const pixelsG = imageDataG.data;
-        const pixelsB = imageDataB.data;
-        const pixelsA = imageDataA.data;
-
-        if (imageDataR.data.length != imageDataB.data.length || imageDataG.data.length != imageDataR.data.length) return;
+        
+        const images = [
+            props.r_imgRef.current as HTMLImageElement,
+            props.g_imgRef.current as HTMLImageElement,
+            props.b_imgRef.current as HTMLImageElement,
+            props.a_imgRef.current as HTMLImageElement
+        ];
+        
+        canvas.width = images[0].naturalWidth || 1;
+        canvas.height = images[0].naturalHeight || 1;
+        
+        const imageDataArray = images.map((image) => {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(image, 0, 0);
+            return context.getImageData(0, 0, canvas.width, canvas.height).data;
+        });
+        
+        const [pixelsR, pixelsG, pixelsB, pixelsA] = imageDataArray;
+        
+        if (pixelsR.length !== pixelsG.length || pixelsB.length !== pixelsR.length || pixelsA.length !== pixelsR.length) return;
 
         const threads = closestDivider(pixelsR.length / 4, navigator.hardwareConcurrency);
         const promises = [];
