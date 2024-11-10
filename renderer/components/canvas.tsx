@@ -1,4 +1,4 @@
-import { forwardRef, MutableRefObject, useEffect } from "react";
+import { forwardRef, MutableRefObject, useCallback, useEffect, useRef } from "react";
 import { closestDivider } from "../utils/closestDivider";
 
 type Canvas = JSX.IntrinsicElements['canvas'];
@@ -28,7 +28,17 @@ export interface WorkerData {
     rSrc: boolean;
 };
 
-export const Canvas = forwardRef<HTMLCanvasElement, CanvasProps> ( function (props, ref: MutableRefObject<HTMLCanvasElement>) {
+export const Canvas = forwardRef<HTMLCanvasElement, CanvasProps>((props, ref: MutableRefObject<any>) => {
+    const workersRef = useRef<Worker[]>([]);
+
+    const initWorkers = useCallback((threads: number) => {
+        if (workersRef.current.length === 0) {
+            for (let i = 0; i < threads; i++) {
+                const worker = new Worker(new URL("../utils/conversionWorker", import.meta.url));
+                workersRef.current.push(worker);
+            }
+        }
+    }, []);
 
     useEffect(() => {
         console.time('Rewrite Canvas');
@@ -40,87 +50,106 @@ export const Canvas = forwardRef<HTMLCanvasElement, CanvasProps> ( function (pro
             props.r_imgRef.current as HTMLImageElement,
             props.g_imgRef.current as HTMLImageElement,
             props.b_imgRef.current as HTMLImageElement,
-            props.a_imgRef.current as HTMLImageElement
+            props.a_imgRef.current as HTMLImageElement,
         ];
-        
-        canvas.width = images[0].naturalWidth || 1;
-        canvas.height = images[0].naturalHeight || 1;
-        
+
+        canvas.width = images[0]?.naturalWidth || 1;
+        canvas.height = images[0]?.naturalHeight || 1;
+
         const imageDataArray = images.map((image) => {
             context.clearRect(0, 0, canvas.width, canvas.height);
             context.drawImage(image, 0, 0);
             return context.getImageData(0, 0, canvas.width, canvas.height).data;
         });
-        
+
         const [pixelsR, pixelsG, pixelsB, pixelsA] = imageDataArray;
-        
+
         if (pixelsR.length !== pixelsG.length || pixelsB.length !== pixelsR.length || pixelsA.length !== pixelsR.length) return;
 
         const threads = closestDivider(pixelsR.length / 4, navigator.hardwareConcurrency);
-        const promises = [];
 
-        const createWorkers = (i: number) => {
-            return new Promise((resolve) => {
-                const worker = new Worker(new URL("../utils/conversionWorker", import.meta.url));
-                
-                const startIdx = i * (pixelsR.length / threads);
-                const endIdx = Math.min((i + 1) * (pixelsR.length / threads), pixelsR.length);
-        
+        initWorkers(threads);
+
+        const createWorkerPromises = () => {
+            const promises = [];
+            const chunkSize = pixelsR.length / threads;
+
+            for (let i = 0; i < threads; i++) {
+                const startIdx = i * chunkSize;
+                const endIdx = Math.min((i + 1) * chunkSize, pixelsR.length);
+
                 const sendingData: WorkerData = {
                     pixelsR: pixelsR.slice(startIdx, endIdx),
                     pixelsG: pixelsG.slice(startIdx, endIdx),
                     pixelsB: pixelsB.slice(startIdx, endIdx),
                     pixelsA: pixelsA.slice(startIdx, endIdx),
                     aSrc: !!props.a_imgSrc,
-                    rSrc: !!props.r_imgSrc
+                    rSrc: !!props.r_imgSrc,
                 };
-        
-                worker.postMessage(sendingData, [
-                    sendingData.pixelsR.buffer,
-                    sendingData.pixelsG.buffer,
-                    sendingData.pixelsB.buffer,
-                    sendingData.pixelsA.buffer,
-                ]);
-        
-                worker.addEventListener('message', (message: MessageEvent<Uint8ClampedArray>) => {
-                    resolve(message.data);
-                });
-            });
-        };
 
-        for (let i = 0; i < threads; i++){
-            promises.push(createWorkers(i));
-        };
+                const worker = workersRef.current[i];
 
-        Promise.all(promises)
-            .then((data: Uint8ClampedArray[]) => {
+                if (worker) {
+                    promises.push(
+                        new Promise<Uint8ClampedArray>((resolve) => {
+                            worker.postMessage(sendingData, [
+                                sendingData.pixelsR.buffer,
+                                sendingData.pixelsG.buffer,
+                                sendingData.pixelsB.buffer,
+                                sendingData.pixelsA.buffer,
+                            ]);
 
-                const length = data.reduce((sum, chunk) => sum + chunk.length, 0);
-                const mergedData = new Uint8ClampedArray(length);
-            
-                let offset = 0;
-                for (const chunk of data) {
-                    mergedData.set(chunk, offset);
-                    offset += chunk.length;
+                            worker.onmessage = ({ data }) => {
+                                resolve(data);
+                            };
+                        })
+                    );
+                } else {
+                    console.error(`Worker ${i} is not available`);
                 }
-            
-                const newData = new ImageData(mergedData, canvas.width, canvas.height);
-                context.putImageData(newData, 0, 0);
-            
-                const resultImg = props.res_imgRef.current as HTMLImageElement;
-                canvas.toBlob((blob) => {
-                    if (blob) {
-                        resultImg.src = URL.createObjectURL(blob);
+            }
+            return promises;
+        };
+
+        const processWorkers = async () => {
+            const promises = createWorkerPromises();
+            if (promises.length > 0) {
+                try {
+                    const imageDataChunks = await Promise.all(promises);
+
+                    const length = imageDataChunks.reduce((sum, chunk) => sum + chunk.length, 0);
+                    const mergedData = new Uint8ClampedArray(length);
+
+                    let offset = 0;
+                    for (const chunk of imageDataChunks) {
+                        mergedData.set(chunk, offset);
+                        offset += chunk.length;
                     }
-                });
-            
-                console.timeEnd('Rewrite Canvas');
-            });
+
+                    const newData = new ImageData(mergedData, canvas.width, canvas.height);
+                    context.putImageData(newData, 0, 0);
+
+                    const resultImg = props.res_imgRef.current as HTMLImageElement;
+                    canvas.toBlob((blob) => {
+                        if (blob) {
+                            resultImg.src = URL.createObjectURL(blob);
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error processing workers:', error);
+                }
+            }
+        };
+
+        processWorkers();
+        console.timeEnd('Rewrite Canvas');
+
+        return () => {
+            workersRef.current.forEach((worker) => worker.terminate());
+            workersRef.current = [];
+        };
 
     }, [props]);
 
-
-    return (
-        <canvas ref={ref} className="hidden" />
-    )
+    return <canvas ref={ref} className="hidden" />;
 });
